@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Museo de la Memoria Colonial</title>
+<script src="three.min.js"></script><script>if(!window.THREE)document.write('<script src="three_min.js"><\/script>')</script><script>if(!window.THREE)document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>')</script>
+<style>
+:root{box-sizing:border-box}
+*{box-sizing:inherit}
+html,body{height:100%;margin:0;background:#120a06;overflow:hidden;font-family:Georgia,"Times New Roman",serif;color:#f3e9dc}
+#stage{position:fixed;inset:0;touch-action:none;cursor:grab}
+#stage.v canvas{filter:sepia(.36) contrast(1.1) saturate(1.12) brightness(.98)}
+#stage canvas{display:block}
+#grain{position:fixed;inset:0;pointer-events:none;z-index:3;opacity:.11}
+#vig{position:fixed;inset:0;pointer-events:none;z-index:4;background:radial-gradient(ellipse at center,transparent 38%,rgba(18,8,0,.82))}
+#hud{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);left:14px;right:150px;z-index:5;pointer-events:none;font:13px/1.4 system-ui,sans-serif;color:#efe0bd;text-shadow:0 1px 3px #000}
+#hud b{font:italic 700 22px Georgia,serif;color:#e2bf6a;display:block}
+#hud i{font-family:Georgia,serif;color:#d9c9a0}
+#tools input{width:100%}
+#tools{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);right:12px;z-index:6;display:flex;flex-direction:column;gap:6px}
+#bar{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:6;display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap}
+button{background:#d9b25a;color:#2a1a12;border:0;border-radius:4px;padding:9px 16px;font:700 14px system-ui,sans-serif;cursor:pointer}
+button:disabled{opacity:.4;cursor:default}
+#bar span{background:#000a;padding:6px 12px;border-radius:4px;font:14px system-ui,sans-serif;min-width:150px;text-align:center}
+#info,#pop{position:fixed;inset:0;z-index:9;background:#000c;display:none;align-items:center;justify-content:center;padding:20px}
+#info div.c,#pop div.c{max-width:560px;max-height:86vh;overflow:auto;background:#f1e4c3;color:#3a2418;border:4px double #8a6a2b;padding:22px 26px}
+#pop h2,#info h2{margin:0 0 4px;font-size:27px}
+#im{font:italic 15px Georgia,serif;color:#7a4a22;margin-bottom:10px}
+#info p,#pop p{margin:0 0 14px;font-size:16px;line-height:1.55;white-space:pre-line}
+#ix{font-size:15px;color:#5a2a1a}
+#info a,#pop a{color:#7a2233;word-break:break-all}
+.qb{display:block;width:100%;text-align:left;margin:6px 0;background:#e6d5a8;border:1px solid #8a6a2b;color:#3a2418}
+.qb.ok{background:#7bbf7b}.qb.no{background:#d98a8a}
+.st{display:block;width:100%;text-align:left;margin:4px 0;font-weight:600}
+#pop small,#info small{display:block;margin-top:10px;font:12px system-ui,sans-serif;color:#6b5a48}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.up{background:#7a2233;color:#f4ead2;border-radius:4px;padding:9px 16px;font:700 14px system-ui,sans-serif;cursor:pointer}
+:focus-visible{outline:3px solid #fff;outline-offset:2px}
+#open{position:fixed;inset:0;z-index:12;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background:radial-gradient(ellipse at center,rgba(30,12,6,.78),rgba(10,4,2,.96));transition:opacity 1.2s}
+#open.gone{opacity:0;pointer-events:none}
+#open .in{max-width:640px}
+#open h1{font:italic 700 clamp(34px,7vw,64px)/1.1 Georgia,serif;color:#e2bf6a;margin:0 0 6px;text-shadow:0 2px 12px #000}
+#open h2{font:italic 400 clamp(18px,3vw,26px) Georgia,serif;color:#f4ead2;margin:0 0 18px}
+#open hr{border:0;height:2px;width:220px;margin:0 auto 18px;background:linear-gradient(90deg,transparent,#d9b25a,transparent)}
+#open p{font-size:17px;line-height:1.6;color:#efe0bd;margin:0 0 14px}
+#open small{display:block;font:13px system-ui,sans-serif;color:#cdb98a;margin:0 0 20px}
+#open button{font-size:17px;padding:12px 30px}
+#prompt{position:fixed;left:50%;bottom:74px;transform:translateX(-50%);z-index:7;background:#000b;color:#f4ead2;border:1px solid #d9b25a;border-radius:4px;padding:8px 16px;font:15px system-ui,sans-serif;display:none;pointer-events:auto;cursor:pointer}#prompt b{display:inline-block;background:#d9b25a;color:#2a1a12;border-radius:3px;padding:1px 8px;margin:0 4px}
+</style>
+</head>
+<body>
+<div id="open"><div class="in"><h1>Museo de la Memoria Colonial</h1><h2>Museum of Colonial Memory</h2><hr><p>This virtual museum explores Philippine literature during the Spanish colonial era (1565 to 1898). Walk through three salas: <b>Sala I</b>, the first printed books; <b>Sala II</b>, faith and tradition; and <b>Sala III</b>, reform and revolution. At the end, <b>Sala IV</b> tests what you learned with a short quiz.</p><small>Drag to turn the camera. W A S D or arrow keys to walk, or use Back and Next. Click a frame to read it. Some frames are songs: open them and press Play. Turn around at the entrance to find the door to the Sala del Teatro, or press Plays room. Walk up to the door and press E to open it.</small><button id="bg">Begin the tour</button></div></div>
+<div id="prompt" onclick="window.__tg&&window.__tg()"></div><div id="stage"></div><div id="grain"></div><div id="vig"></div>
+<div id="hud" style="display:none"></div>
+<div id="tools"><button id="plan">Floor plan</button><button id="teat">Plays room</button><button id="cur" style="display:none">Curators</button><button id="snd">Music: on</button><input id="vol" type="range" min="0" max="100" value="30" aria-label="Music volume"></div>
+<div id="bar"><button id="prev">Back</button><span id="lbl"></span><button id="next">Next</button><button id="fw" aria-label="Walk forward">&#9650;</button><button id="bw" aria-label="Walk back">&#9660;</button><button id="rn" aria-pressed="false" title="Hold Shift to run">Run (Shift)</button></div>
+<div id="pop" role="dialog" aria-modal="true" style="display:none;z-index:10;inset:0;background:#000c;align-items:center;justify-content:center;padding:20px"><div class="c"><h2 id="pt"></h2><div id="pb"></div><div class="row" style="margin-top:12px"><button id="pc">Close</button></div></div></div>
+<div id="info" role="dialog" aria-modal="true"><div class="c"><h2 id="it"></h2><div id="im"></div><p id="ib"></p><p id="ix"></p><div id="cap" style="font:italic 13px Georgia,serif;color:#6b5a48;margin:-4px 0 12px"></div>
+<div class="row"><label class="up" id="alab">Add song<input id="afile" type="file" accept="audio/*" hidden></label><button id="sp">▶ Play song</button><button id="ic">Close</button></div><small id="as"></small></div></div>
+<script src="app.js"></script>
+</body>
+</html>
